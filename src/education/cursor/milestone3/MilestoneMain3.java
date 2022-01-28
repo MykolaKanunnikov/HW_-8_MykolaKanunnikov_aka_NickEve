@@ -2,6 +2,7 @@ package education.cursor.milestone3;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,15 +43,13 @@ public class MilestoneMain3 {
         movies2.forEach(System.out::println);
         //************************************************************
 
-        Stream<Movie> movies1Stream = movies1.stream();
-        Stream<Movie> movies2Stream = movies2.stream();
-        var moviesQuantityForGenre = Stream.concat(movies1Stream, movies2Stream)
+        Supplier<Stream<Movie>> supplierMovie1Stream = movies1::stream;
+        Supplier<Stream<Movie>> supplierMovie2Stream = movies2::stream;
+        var moviesQuantityForGenre = Stream.concat(supplierMovie1Stream.get(), supplierMovie2Stream.get())
                 .collect(Collectors.groupingBy(Movie::getGenre, Collectors.counting()));
         System.out.println("\nMovies quantity for a genre: " + moviesQuantityForGenre);
 
-        Stream<Movie> movies3Stream = movies1.stream();
-        Stream<Movie> movies4Stream = movies2.stream();
-        var avgGenrePrice = Stream.concat(movies3Stream, movies4Stream)
+        var avgGenrePrice = Stream.concat(supplierMovie1Stream.get(), supplierMovie2Stream.get())
                 .collect(Collectors.groupingBy(Movie::getGenre, Collectors.averagingInt(Movie::getTicketPrice)));
         System.out.println("\nAverage price by genre: " + avgGenrePrice);
 
